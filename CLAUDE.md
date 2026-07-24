@@ -1,10 +1,10 @@
 # Todo App - Claude Code Instructions
 
-## ⚠️ Current Repository State
+## Current Repository State
 
-This repository currently contains **planning and reference documentation only** — `README.md`, `USER_GUIDE.md`, `EVALUATION.md`, `PRPs/*.md`, and `.github/copilot-instructions.md` describe the **target implementation** of a Todo App. The actual Next.js source code (`app/`, `lib/`, `middleware.ts`, `package.json`, `tests/`, etc.) does not exist in this repo yet.
+The Todo App is **fully implemented** (all 11 PRP features): Next.js source code lives in `app/` and `lib/`, with `middleware.ts`, `scripts/seed-holidays.ts`, and Playwright E2E tests in `tests/`. `README.md`, `USER_GUIDE.md`, `EVALUATION.md`, and `PRPs/*.md` remain the reference documentation for the implemented behavior. Copy `.env.example` to `.env.local` (with a random `JWT_SECRET`) before running.
 
-Everything below describes the architecture and conventions the app **must follow once implemented**. When asked to build or extend a feature, scaffold the project structure described here rather than assuming it already exists — check with `ls`/`find` first.
+Everything below describes the architecture and conventions the app follows.
 
 ## Architecture Overview
 
