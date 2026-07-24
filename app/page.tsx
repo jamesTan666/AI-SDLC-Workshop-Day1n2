@@ -427,10 +427,25 @@ export default function TodoPage() {
   };
 
   const handleToggleSubtask = async (subtask: Subtask) => {
+    const nextValue = !subtask.completed;
+    // Optimistic update (same pattern as todo completion); the refetch below
+    // reconciles with the server.
+    setTodos((previous) =>
+      previous.map((todo) =>
+        todo.id === subtask.todo_id
+          ? {
+              ...todo,
+              subtasks: (todo.subtasks ?? []).map((item) =>
+                item.id === subtask.id ? { ...item, completed: nextValue } : item,
+              ),
+            }
+          : todo,
+      ),
+    );
     const response = await fetch(`/api/subtasks/${subtask.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ completed: !subtask.completed }),
+      body: JSON.stringify({ completed: nextValue }),
     });
     if (!response.ok) setBanner(await readError(response));
     await refreshTodos();
@@ -598,7 +613,9 @@ export default function TodoPage() {
     const preset: FilterPreset = {
       id: crypto.randomUUID(),
       name,
-      filters: { ...activeFilters },
+      // Capture the live search text, not the debounced copy — the user may
+      // save within the 300ms debounce window.
+      filters: { ...filters, search: searchText },
       createdAt: getSingaporeNowString(),
     };
     const next = [...presets, preset];

@@ -91,7 +91,11 @@ test.describe('Calendar', () => {
     await app.createTodo({ title: 'Calendar todo', dueDate });
     await page.getByTestId('nav-calendar').click();
 
-    await page.getByTestId(`calendar-day-${dueDay}`).click();
+    // Wait for the async todos fetch to populate the cell before clicking —
+    // day cells only open the modal once they have todos.
+    const cell = page.getByTestId(`calendar-day-${dueDay}`);
+    await expect(cell).toContainText('Calendar todo');
+    await cell.click();
     await expect(page.locator('role=dialog')).toBeVisible();
     await expect(page.locator('role=dialog')).toContainText('Calendar todo');
 

@@ -165,9 +165,8 @@ test.describe('Export & Import', () => {
     await expect(app.todoItem('Imported B')).toBeVisible();
 
     await page.getByTestId('import-input').setInputFiles(file);
-    await expect(page.getByTestId('notice-banner')).toContainText('Imported 1 todo');
-
-    const count = await app.todoItem('Imported B').count();
-    expect(count).toBe(2);
+    // Auto-retrying count assertion — the banner from the first import may
+    // still be visible while the second import is in flight.
+    await expect(app.todoItem('Imported B')).toHaveCount(2);
   });
 });
